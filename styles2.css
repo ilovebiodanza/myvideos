@@ -1,0 +1,173 @@
+:root {
+    --primary-color: #4a6fa5;
+    --secondary-color: #166088;
+    --accent-color: #4fc3f7;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.logo {
+    height: 60px;
+}
+
+.container {
+    display: flex;
+    min-height: calc(100vh - 120px);
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--dark-color);
+    color: white;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.modules-list {
+    list-style: none;
+}
+
+.modules-list li {
+    margin-bottom: 0.5rem;
+}
+
+.modules-list a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.modules-list a:hover, .modules-list a.active {
+    background-color: var(--secondary-color);
+}
+
+.submenu {
+    list-style: none;
+    padding-left: 1rem;
+    margin-top: 0.3rem;
+    display: none;
+}
+
+.submenu.show {
+    display: block;
+}
+
+.submenu a {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.5rem;
+}
+
+.content {
+    flex: 1;
+    padding: 1.5rem;
+    background-color: white;
+}
+
+.module-section {
+    margin-bottom: 2rem;
+}
+
+.module-section h2 {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.video-card {
+    background-color: var(--light-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.video-card[data-orientation="vertical"] {
+    display: flex;
+    flex-direction: column;
+}
+
+.video-intro, .video-outro {
+    padding: 1rem;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.video-intro img, .video-outro img {
+    height: 40px;
+    margin-bottom: 0.5rem;
+}
+
+video {
+    width: 100%;
+    display: block;
+}
+
+/* Estilos para orientación vertical en desktop */
+@media (min-width: 992px) {
+    .video-card[data-orientation="vertical"] {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    
+    .video-card[data-orientation="vertical"] video {
+        width: 60%;
+    }
+    
+    .video-intro, .video-outro {
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+}
+
+footer {
+    background-color: var(--dark-color);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: sticky;
+    bottom: 0;
+}
