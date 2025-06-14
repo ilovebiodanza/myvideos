@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yo amo Biodanza - Videos Tutoriales</title>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Favicon -->
+    <link rel="icon" href="img/logo-biodanza.png" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white py-3 shadow">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center justify-content-center">
+                <img src="img/logo-biodanza.png" alt="Yo amo Biodanza" class="mr-3" style="height: 50px;">
+                <h1 class="mb-0">Videos Tutoriales</h1>
+            </div>
+        </div>
+    </header>
 
+    <!-- Contenido principal -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse py-3">
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#modulo-inicio">
+                                <i class="fas fa-home mr-2"></i>Módulo de Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="collapse" href="#gestionActividadesCollapse">
+                                <i class="fas fa-tasks mr-2"></i>Gestión de Actividades
+                                <i class="fas fa-chevron-down ml-1"></i>
+                            </a>
+                            <div class="collapse show" id="gestionActividadesCollapse">
+                                <ul class="nav flex-column pl-4">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#modulo-contactos">Módulo de Contactos</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#modulo-grupos">Módulo de Grupos</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#modulo-actividades">Módulo de Actividades</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="collapse" href="#gestionClasesCollapse">
+                                <i class="fas fa-music mr-2"></i>Gestión de Clases
+                                <i class="fas fa-chevron-down ml-1"></i>
+                            </a>
+                            <div class="collapse" id="gestionClasesCollapse">
+                                <ul class="nav flex-column pl-4">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#danzas">Danzas</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#musicas">Músicas</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#clases-sesiones">Clases/Sesiones</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#perfil-usuario">
+                                <i class="fas fa-user mr-2"></i>Perfil del Usuario
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 py-4">
+                <!-- Módulo de Inicio -->
+                <section id="modulo-inicio" class="mb-5">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="text-primary"><i class="fas fa-home mr-2"></i>Módulo de Inicio</h2>
+                        <button class="btn btn-sm btn-outline-primary toggle-view" data-view="grid">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="row video-grid">
+                        <!-- Video 1 -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card video-card h-100" data-orientation="vertical">
+                                <div class="video-intro card-img-overlay d-flex flex-column justify-content-center align-items-center text-white bg-primary">
+                                    <img src="img/logo-biodanza.png" alt="Logo" class="mb-3" style="height: 60px;">
+                                    <h3>¿Cómo registrarse en la Aplicación?</h3>
+                                    <p class="mb-0">Módulo de Inicio</p>
+                                </div>
+                                <video class="card-img-top w-100 d-none">
+                                    <source src="videos/modulo-inicio/registro.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-outro card-img-overlay d-none flex-column justify-content-center align-items-center text-white bg-primary">
+                                    <img src="img/logo-biodanza.png" alt="Logo" class="mb-3" style="height: 60px;">
+                                    <p class="mb-1">Gracias por ver este tutorial</p>
+                                    <p class="mb-0 font-weight-bold">¡Utiliza la aplicación Yo amo Biodanza!</p>
+                                </div>
+                                <div class="card-footer bg-light">
+                                    <small class="text-muted">Duración: 2:15 min</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Más videos del módulo de inicio -->
+                    </div>
+                </section>
+
+                <!-- Más secciones de módulos -->
+                
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-auto">
+        <div class="container-fluid text-center">
+            <p class="mb-0">© 2023 Yo amo Biodanza. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <!-- Script personalizado -->
+    <script src="script.js"></script>
+</body>
+</html>
