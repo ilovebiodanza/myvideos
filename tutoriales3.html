@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yo amo Biodanza - Tutoriales</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://vjs.zencdn.net/7.11.4/video-js.css">
+    <style>
+        .video-container {
+            position: relative;
+            width: 100%;
+            margin: 20px 0;
+        }
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 2;
+        }
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .video-wrapper.horizontal {
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        .video-wrapper.vertical {
+            padding-bottom: 177.78%; /* 9:16 Aspect Ratio */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <h1 class="text-center my-4">Tutoriales de la Aplicación "Yo amo Biodanza"</h1>
+    <div id="moduleAccordion">
+        <!-- Módulo de Inicio -->
+        <div class="card">
+            <div class="card-header" id="headingInicio">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseInicio">
+                        2.1. Módulo de Inicio
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseInicio" class="collapse show" data-parent="#moduleAccordion">
+                <div class="card-body">
+                    <div class="nav flex-column nav-pills">
+                        <a class="nav-link" href="#" onclick="loadVideo('inicio', 'registro', 'inicial/modulo inicial - registrar usuario - original.mp4', false)">¿Cómo registrarse en la Aplicación?</a>
+                        <a class="nav-link" href="#" onclick="loadVideo('inicio', 'ingreso', 'video/inicio_ingreso.mp4', false)">¿Cómo ingresar a la aplicación?</a>
+                        <a class="nav-link" href="#" onclick="loadVideo('inicio', 'estructura', 'video/inicio_estructura.mp4', false)">Estructura de los módulos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Agregar más módulos aquí siguiendo el mismo patrón -->
+    </div>
+
+    <div class="video-container">
+        <div class="video-overlay intro" id="videoIntro">
+            <img src="img/logo - yo amo biodanza - fondo transparente.png" alt="Yo amo Biodanza Logo" class="overlay-logo">
+            <h3 class="overlay-title">Módulo: <span class="module-name"></span></h3>
+            <p class="overlay-description">Acción: <span class="action-name"></span></p>
+        </div>
+        
+        <div class="video-wrapper">
+            <video id="mainPlayer" class="video-js vjs-default-skin" controls>
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+        
+        <div class="video-overlay outro" id="videoOutro">
+            <img src="img/logo - yo amo biodanza - fondo transparente.png" alt="Yo amo Biodanza Logo" class="overlay-logo">
+            <h3>¡Gracias por ver este tutorial!</h3>
+            <p>Te invitamos a utilizar la aplicación Yo amo Biodanza</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+<script>
+    const videoPlayer = {
+        init: function() {
+            this.player = videojs('mainPlayer');
+            this.setupEventListeners();
+            this.setupOverlays();
+        },
+        
+        setupEventListeners: function() {
+            this.player.on('play', () => {
+                this.hideOverlay('intro');
+            });
+            
+            this.player.on('ended', () => {
+                this.showOverlay('outro');
+            });
+        },
+        
+        loadVideo: function(module, action, src, isVertical) {
+            document.querySelector('.module-name').textContent = module;
+            document.querySelector('.action-name').textContent = action;
+            this.player.src(src);
+            this.setVideoOrientation(isVertical);
+            this.showOverlay('intro');
+        },
+        
+        setVideoOrientation: function(isVertical) {
+            const wrapper = document.querySelector('.video-wrapper');
+            wrapper.className = `video-wrapper ${isVertical ? 'vertical' : 'horizontal'}`;
+        },
+        
+        showOverlay: function(type) {
+            document.getElementById(`video${type.charAt(0).toUpperCase() + type.slice(1)}`).style.display = 'flex';
+        },
+        
+        hideOverlay: function(type) {
+            document.getElementById(`video${type.charAt(0).toUpperCase() + type.slice(1)}`).style.display = 'none';
+        }
+    };
+
+    function loadVideo(module, action, src, isVertical) {
+        videoPlayer.loadVideo(module, action, src, isVertical);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        videoPlayer.init();
+    });
+</script>
+</body>
+</html>
