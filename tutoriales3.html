@@ -108,6 +108,12 @@
             });
         },
         
+        setupOverlays: function() {
+            // Inicialmente ocultar las superposiciones
+            document.getElementById('videoIntro').style.display = 'none';
+            document.getElementById('videoOutro').style.display = 'none';
+        },
+        
         loadVideo: function(module, action, src, isVertical) {
             document.querySelector('.module-name').textContent = module;
             document.querySelector('.action-name').textContent = action;
