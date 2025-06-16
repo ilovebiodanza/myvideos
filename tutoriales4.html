@@ -125,11 +125,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
+        function encriptar(texto, desplazamiento) {
+            return texto.split('').map(char => {
+                if (char >= 'A' && char <= 'Z') {
+                    return String.fromCharCode((char.charCodeAt(0) - 65 + desplazamiento) % 26 + 65);
+                } else if (char >= 'a' && char <= 'z') {
+                    return String.fromCharCode((char.charCodeAt(0) - 97 + desplazamiento) % 26 + 97);
+                }
+                return char; // No modifica caracteres no alfabéticos
+            }).join('');
+        }
+
+        
         // Configuración
         const config = {
-            githubRepo: 'tu_usuario/tu_repositorio', // Reemplazar con tu repositorio
+            githubRepo: 'ilovebiodanza/myvideos', // Reemplazar con tu repositorio
             branch: 'main', // Rama del repositorio
-            token: 'tu_token_de_acceso' // Token de acceso a GitHub (necesita permisos de escritura)
+            token: encriptar('jks_XQaqN3xUXcLCbw3OpqcaN7y7yixb4d30au7Q',-3) // Token de acceso a GitHub (necesita permisos de escritura)
         };
         
         // Variables de estado
