@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cargar videos iniciales
     loadVideos();
+    setMode('view');
 });
 
 // Funciones principales
