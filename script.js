@@ -10,7 +10,10 @@ function encriptar(texto, desplazamiento) {
 }
 
 // Configuración
-const config = {
+const config = {    // Asegúrate de actualizar la llamada a esta función en loadVideosForClassification:
+    // Cambia playButton.onclick a:
+    // playButton.onclick = () => showVideoInModal(video.download_url, videoTitle.textContent, classification);
+
     githubRepo: 'ilovebiodanza/myvideos',
     branch: 'main',
     token: encriptar('jks_XQaqN3xUXcLCbw3OpqcaN7y7yixb4d30au7Q', -3)
@@ -164,12 +167,13 @@ function createVideoListItem(classification, video) {
     listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
     
     const videoTitle = document.createElement('span');
-    videoTitle.textContent = video.name.replace(/\.[^/.]+$/, '');
+    videoTitle.nameOk = video.name.replace(/\.[^/.]+$/, '');
+    videoTitle.textContent = videoTitle.nameOk.replace("Yo amo Biodanza", "Yo❤Biodanza");
     
     const playButton = document.createElement('button');
     playButton.className = 'btn btn-primary btn-sm';
     playButton.textContent = 'Play';
-    playButton.onclick = () => showVideoInModal(video.download_url, videoTitle.textContent, classification);
+    playButton.onclick = () => showVideoInModal(video.download_url, videoTitle.nameOk, classification);
     
     listItem.appendChild(videoTitle);
     listItem.appendChild(playButton);
@@ -272,10 +276,6 @@ function showVideoInModal(videoUrl, videoTitle, classification) {
             videoElement.style.width = 'auto';
         }
     };
-    
-    // Asegúrate de actualizar la llamada a esta función en loadVideosForClassification:
-    // Cambia playButton.onclick a:
-    // playButton.onclick = () => showVideoInModal(video.download_url, videoTitle.textContent, classification);
 }
 // Funciones de administración
 async function loadVideosForDeletion() {
