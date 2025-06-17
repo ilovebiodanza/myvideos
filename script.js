@@ -169,7 +169,7 @@ function createVideoListItem(classification, video) {
     const playButton = document.createElement('button');
     playButton.className = 'btn btn-primary btn-sm';
     playButton.textContent = 'Play';
-    playButton.onclick = () => showVideoInModal(video.download_url, videoTitle.textContent);
+    playButton.onclick = () => showVideoInModal(video.download_url, videoTitle.textContent, classification);
     
     listItem.appendChild(videoTitle);
     listItem.appendChild(playButton);
@@ -189,22 +189,34 @@ function createVideoListItem(classification, video) {
 }
 
 // Modal de video
-function showVideoInModal(videoUrl, videoTitle) {
+function showVideoInModal(videoUrl, videoTitle, classification) {
     const modalId = 'videoModal_' + Math.random().toString(36).substr(2, 9);
     
     const modalHTML = `
         <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
-                <div class="modal-content" style="background-color: black;">
+                <div class="modal-content video-modal-content" style="background-color: black;">
                     <div class="modal-header border-0" style="background-color: black;">
-                        <h5 class="modal-title text-white">${videoTitle}</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body p-0 d-flex justify-content-center align-items-center" style="min-height: 50vh;">
-                        <video controls autoplay class="modal-video-player" style="max-width: 100%; max-height: 80vh; width: auto; height: auto;">
+                    <div class="modal-body p-0 d-flex flex-column justify-content-center align-items-center text-center text-white" style="min-height: 70vh;">
+                        <!-- Pantalla de intro -->
+                        <div id="intro-screen" class="d-flex flex-column align-items-center justify-content-center">
+                            <img src="../myImages/perfil/logo - yo amo biodanza - fondo transparente.png" alt="Logo" class="mb-4" style="max-width: 200px;">
+                            <h3 class="text-uppercase mb-2">${classification}</h3>
+                            <h2 class="display-5">${videoTitle}</h2>
+                        </div>
+                        
+                        <!-- Reproductor de video (oculto inicialmente) -->
+                        <video id="video-player" controls class="d-none" style="max-width: 100%; max-height: 80vh;">
                             <source src="${videoUrl}" type="video/mp4">
-                            Tu navegador no soporta el elemento de video.
                         </video>
+                        
+                        <!-- Pantalla de fin (oculta inicialmente) -->
+                        <div id="end-screen" class="d-none flex-column align-items-center justify-content-center">
+                            <img src="logo.png" alt="Logo" class="mb-4" style="max-width: 200px;">
+                            <h2 class="display-5">Fin del video</h2>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -216,27 +228,29 @@ function showVideoInModal(videoUrl, videoTitle) {
     document.body.appendChild(modalContainer);
     
     const videoModal = new bootstrap.Modal(document.getElementById(modalId));
-    const videoElement = document.querySelector(`#${modalId} .modal-video-player`);
+    const videoElement = document.querySelector(`#${modalId} #video-player`);
+    const introScreen = document.querySelector(`#${modalId} #intro-screen`);
+    const endScreen = document.querySelector(`#${modalId} #end-screen`);
     
-    // Calcular tamaño cuando se conozcan las dimensiones del video
-    videoElement.onloadedmetadata = function() {
-        const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
-        const windowHeight = window.innerHeight * 0.8; // 80vh
-        const windowWidth = window.innerWidth * 0.9;   // 90% del ancho
-        
-        if (windowWidth / aspectRatio <= windowHeight) {
-            videoElement.style.width = `${windowWidth}px`;
-            videoElement.style.height = 'auto';
-        } else {
-            videoElement.style.height = `${windowHeight}px`;
-            videoElement.style.width = 'auto';
-        }
-    };
-
+    // Mostrar modal
     videoModal.show();
     
-    // Detener el video cuando se cierra el modal
+    // Configurar temporizador para la intro
+    const introTimer = setTimeout(() => {
+        introScreen.classList.add('d-none');
+        videoElement.classList.remove('d-none');
+        videoElement.play();
+    }, 5000); // 5 segundos
+    
+    // Manejar el final del video
+    videoElement.addEventListener('ended', () => {
+        videoElement.classList.add('d-none');
+        endScreen.classList.remove('d-none');
+    });
+    
+    // Detener todo cuando se cierra el modal
     document.getElementById(modalId).addEventListener('hidden.bs.modal', () => {
+        clearTimeout(introTimer);
         if (videoElement) {
             videoElement.pause();
             videoElement.currentTime = 0;
@@ -244,13 +258,8 @@ function showVideoInModal(videoUrl, videoTitle) {
         modalContainer.remove();
     });
     
-    // Redimensionar cuando cambia el tamaño de la ventana
-    window.addEventListener('resize', function handleResize() {
-        if (!videoModal._isShown) {
-            window.removeEventListener('resize', handleResize);
-            return;
-        }
-        
+    // Redimensionar responsivamente
+    videoElement.onloadedmetadata = function() {
         const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
         const windowHeight = window.innerHeight * 0.8;
         const windowWidth = window.innerWidth * 0.9;
@@ -262,7 +271,11 @@ function showVideoInModal(videoUrl, videoTitle) {
             videoElement.style.height = `${windowHeight}px`;
             videoElement.style.width = 'auto';
         }
-    });
+    };
+    
+    // Asegúrate de actualizar la llamada a esta función en loadVideosForClassification:
+    // Cambia playButton.onclick a:
+    // playButton.onclick = () => showVideoInModal(video.download_url, videoTitle.textContent, classification);
 }
 // Funciones de administración
 async function loadVideosForDeletion() {

@@ -200,3 +200,51 @@ body {
         max-height: 70vh !important;
     }
 }
+
+/* Estilos para el reproductor de video */
+.video-modal-content {
+    color: white;
+    user-select: none;
+}
+
+#intro-screen, #end-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#video-player {
+    background-color: #000;
+    z-index: 2;
+}
+
+/* Efecto de transición para la intro */
+#intro-screen h3 {
+    animation: slideUp 0.8s ease-out;
+}
+
+#intro-screen h2 {
+    animation: slideUp 0.8s ease-out 0.3s forwards;
+    opacity: 0;
+}
+
+@keyframes slideUp {
+    from { 
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
