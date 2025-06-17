@@ -214,7 +214,7 @@ function showVideoInModal(videoUrl, videoTitle, classification) {
                         
                         <!-- Pantalla de fin (oculta inicialmente) -->
                         <div id="end-screen" class="d-none flex-column align-items-center justify-content-center">
-                            <img src="logo.png" alt="Logo" class="mb-4" style="max-width: 200px;">
+                            <img src="../myimages/perfil/logo - yo amo biodanza - fondo transparente.png" alt="Logo" class="mb-4" style="max-width: 200px;">
                             <h2 class="display-5">Fin del video</h2>
                         </div>
                     </div>
