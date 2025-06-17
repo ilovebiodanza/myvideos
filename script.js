@@ -139,6 +139,7 @@ async function loadVideosForClassification(classification) {
         if (!response.ok) throw new Error(`Error al cargar videos para ${classification}`);
         
         const videos = await response.json();
+        const idClass = classification.replace(/ /g, "-")
         
         // Crear el elemento del acordeón
         const accordionItem = document.createElement('div');
@@ -147,24 +148,24 @@ async function loadVideosForClassification(classification) {
         // Crear el encabezado del acordeón
         const accordionHeader = document.createElement('h2');
         accordionHeader.className = 'accordion-header';
-        accordionHeader.id = `heading-${classification}`;
+        accordionHeader.id = `heading-${idClass}`;
         
         const accordionButton = document.createElement('button');
         accordionButton.className = 'accordion-button collapsed';
         accordionButton.type = 'button';
         accordionButton.setAttribute('data-bs-toggle', 'collapse');
-        accordionButton.setAttribute('data-bs-target', `#collapse-${classification}`);
+        accordionButton.setAttribute('data-bs-target', `#collapse-${idClass}`);
         accordionButton.setAttribute('aria-expanded', 'false');
-        accordionButton.setAttribute('aria-controls', `collapse-${classification}`);
+        accordionButton.setAttribute('aria-controls', `collapse-${idClass}`);
         accordionButton.textContent = classification;
         
         accordionHeader.appendChild(accordionButton);
         
         // Crear el cuerpo del acordeón
         const accordionCollapse = document.createElement('div');
-        accordionCollapse.id = `collapse-${classification}`;
+        accordionCollapse.id = `collapse-${idClass}`;
         accordionCollapse.className = 'accordion-collapse collapse';
-        accordionCollapse.setAttribute('aria-labelledby', `heading-${classification}`);
+        accordionCollapse.setAttribute('aria-labelledby', `heading-${idClass}`);
         accordionCollapse.setAttribute('data-bs-parent', '#videosContainer');
         
         const accordionBody = document.createElement('div');
