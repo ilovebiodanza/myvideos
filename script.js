@@ -202,7 +202,7 @@ function showVideoInModal(videoUrl, videoTitle, classification) {
                     <div class="modal-body p-0 d-flex flex-column justify-content-center align-items-center text-center text-white" style="min-height: 70vh;">
                         <!-- Pantalla de intro -->
                         <div id="intro-screen" class="d-flex flex-column align-items-center justify-content-center">
-                            <img src="../myImages/perfil/logo - yo amo biodanza - fondo transparente.png" alt="Logo" class="mb-4" style="max-width: 200px;">
+                            <img src="../myimages/perfil/logo - yo amo biodanza - fondo transparente.png" alt="Logo" class="mb-4" style="max-width: 200px;">
                             <h3 class="text-uppercase mb-2">${classification}</h3>
                             <h2 class="display-5">${videoTitle}</h2>
                         </div>
