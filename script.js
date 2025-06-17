@@ -105,40 +105,6 @@ async function loadVideosForClassification(classification) {
         if (!response.ok) throw new Error(`Error al cargar videos para ${classification}`);
         
         const videos = await response.json();
-        const classificationContainer = document.createElement('div');
-        classificationContainer.className = 'classification-container mb-5';
-        
-        const classificationTitle = document.createElement('h2');
-        classificationTitle.textContent = classification;
-        classificationTitle.className = 'mb-3';
-        classificationContainer.appendChild(classificationTitle);
-        
-        const row = document.createElement('div');
-        row.className = 'row';
-        
-        for (const video of videos) {
-            if (video.type === 'file' && isVideoFile(video.name)) {
-                const videoElement = createVideoElement(classification, video);
-                const col = document.createElement('div');
-                col.className = 'col-md-6 col-lg-4 mb-4';
-                col.appendChild(videoElement);
-                row.appendChild(col);
-            }
-        }
-        
-        classificationContainer.appendChild(row);
-        videosContainer.appendChild(classificationContainer);
-    } catch (error) {
-        console.error(`Error al cargar videos para ${classification}:`, error);
-    }
-}
-    */
-async function loadVideosForClassification(classification) {
-    try {
-        const response = await fetch(`https://api.github.com/repos/${config.githubRepo}/contents/${classification}?ref=${config.branch}`);
-        if (!response.ok) throw new Error(`Error al cargar videos para ${classification}`);
-        
-        const videos = await response.json();
         const idClass = classification.replace(/ /g, "-")
         
         // Crear el elemento del acordeón
@@ -197,7 +163,41 @@ async function loadVideosForClassification(classification) {
         console.error(`Error al cargar videos para ${classification}:`, error);
     }
 }
-
+    */
+async function loadVideosForClassification(classification) {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${config.githubRepo}/contents/${classification}?ref=${config.branch}`);
+        if (!response.ok) throw new Error(`Error al cargar videos para ${classification}`);
+        
+        const videos = await response.json();
+        const classificationContainer = document.createElement('div');
+        classificationContainer.className = 'classification-container mb-5';
+        
+        const classificationTitle = document.createElement('h2');
+        classificationTitle.textContent = classification;
+        classificationTitle.className = 'mb-3';
+        classificationContainer.appendChild(classificationTitle);
+        
+        const videoList = document.createElement('ul');
+        videoList.className = 'video-list';
+        
+        // Ordenar videos alfabéticamente
+        videos.sort((a, b) => a.name.localeCompare(b.name));
+        
+        for (const video of videos) {
+            if (video.type === 'file' && isVideoFile(video.name)) {
+                const videoElement = createVideoElement(classification, video);
+                videoList.appendChild(videoElement);
+            }
+        }
+        
+        classificationContainer.appendChild(videoList);
+        videosContainer.appendChild(classificationContainer);
+    } catch (error) {
+        console.error(`Error al cargar videos para ${classification}:`, error);
+    }
+}
+/*
 function createVideoElement(classification, video) {
     const videoCard = document.createElement('div');
     videoCard.className = 'video-card video-item h-100';
@@ -221,6 +221,45 @@ function createVideoElement(classification, video) {
     }
     
     return videoCard;
+}
+*/
+
+function createVideoElement(classification, video) {
+    const listItem = document.createElement('li');
+    listItem.className = 'video-list-item';
+    
+    const title = document.createElement('span');
+    title.textContent = video.name.replace(/\.[^/.]+$/, ''); // Remover extensión
+    listItem.appendChild(title);
+    
+    const playBtn = document.createElement('button');
+    playBtn.className = 'video-play-btn';
+    playBtn.textContent = 'Play';
+    playBtn.onclick = () => showVideoModal(video.download_url);
+    listItem.appendChild(playBtn);
+    
+    if (currentMode === 'edit') {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger btn-sm';
+        deleteBtn.textContent = 'Eliminar';
+        deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            deleteVideo(classification, video.name);
+        };
+        listItem.appendChild(deleteBtn);
+    }
+    
+    return listItem;
+}
+
+function showVideoModal(videoUrl) {
+    const modalTitle = document.getElementById('videoModalTitle');
+    const modalBody = document.getElementById('videoModalBody');
+    
+    modalBody.innerHTML = `<video controls autoplay class="w-100"><source src="${videoUrl}" type="video/mp4"></video>`;
+    
+    const videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
+    videoModal.show();
 }
 
 async function loadVideosForDeletion() {
