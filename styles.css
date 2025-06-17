@@ -1,121 +1,170 @@
-.video-container {
-    margin-bottom: 20px;
-}
-.video-card {
+/* Estilos base */
+body {
     background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.video-player {
-    width: 100%;
-    border-radius: 5px;
+
+.container {
+    max-width: 1200px;
+    padding-bottom: 50px;
 }
-.admin-panel {
-    background-color: #e9ecef;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: none;
-}
+
+/* Indicador de modo */
 .mode-indicator {
     position: fixed;
     top: 10px;
     right: 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 8px 15px;
+    border-radius: 20px;
     font-weight: bold;
     z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
 .view-mode {
     background-color: #28a745;
     color: white;
 }
+
 .edit-mode {
     background-color: #dc3545;
     color: white;
 }
-.video-item {
-    transition: transform 0.2s;
-}
-.video-item:hover {
-    transform: scale(1.02);
+
+/* Panel de administración */
+.admin-panel {
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: none;
 }
 
-/* Estilos adicionales para responsividad */
-@media (max-width: 768px) {
-    .video-card {
-        padding: 10px;
-    }
-    h1 {
-        font-size: 1.8rem;
-    }
-    .admin-panel {
-        padding: 15px;
-    }
+/* Acordeón de clasificaciones */
+.accordion {
+    margin-top: 20px;
 }
-.accordion-button:not(.collapsed) {
+
+.accordion-item {
+    border: 1px solid rgba(0,0,0,0.125);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.accordion-button {
+    font-weight: 600;
+    padding: 15px 20px;
     background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f1f3f5;
     color: #212529;
+    box-shadow: none;
 }
 
 .accordion-button:focus {
     box-shadow: none;
-    border-color: rgba(0,0,0,.125);
-}
-
-.accordion-item {
-    margin-bottom: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(0,0,0,.125);
-}
-
-.accordion-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.accordion-body {
-    padding: 20px;
+    border-color: rgba(0,0,0,0.125);
 }
 
 /* Lista de videos */
-.video-list {
-    list-style-type: none;
-    padding: 0;
+.list-group {
+    border-radius: 0;
 }
 
-.video-list-item {
+.list-group-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid #dee2e6;
+    padding: 12px 20px;
+    border-left: none;
+    border-right: none;
     transition: background-color 0.2s;
 }
 
-.video-list-item:hover {
+.list-group-item:hover {
     background-color: #f8f9fa;
 }
 
-.video-play-btn {
-    background-color: #0d6efd;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
+.list-group-item:first-child {
+    border-top: none;
 }
 
-.video-play-btn:hover {
-    background-color: #0b5ed7;
+.list-group-item:last-child {
+    border-bottom: none;
 }
 
-.video-modal .modal-dialog {
+/* Botones */
+.btn-sm {
+    padding: 5px 12px;
+    font-size: 0.875rem;
+}
+
+/* Modal de video */
+.modal-video .modal-dialog {
     max-width: 800px;
 }
 
-.video-modal .modal-body video {
+.modal-video .modal-content {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.modal-video video {
     width: 100%;
+    background-color: #000;
+}
+
+/* Formulario */
+#addVideoForm {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .accordion-button {
+        padding: 12px 15px;
+        font-size: 1rem;
+    }
+    
+    .list-group-item {
+        padding: 10px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .list-group-item button {
+        margin-top: 8px;
+        align-self: flex-end;
+    }
+    
+    .admin-panel {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .mode-indicator {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 20px;
+    }
 }
