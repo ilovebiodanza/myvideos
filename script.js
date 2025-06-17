@@ -16,7 +16,7 @@ const config = {    // Asegúrate de actualizar la llamada a esta función en lo
 
     githubRepo: 'ilovebiodanza/myvideos',
     branch: 'main',
-    token: encriptar('jks_XQaqN3xUXcLCbw3OpqcaN7y7yixb4d30au7Q', -3)
+    token: encriptar('jks_7pD5dWIKMWN8NuyURfjAUx0daUFuyz2EFtBY', -3)
 };
 
 // Variables de estado
