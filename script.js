@@ -194,14 +194,14 @@ function showVideoInModal(videoUrl, videoTitle) {
     
     const modalHTML = `
         <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">${videoTitle}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content" style="background-color: black;">
+                    <div class="modal-header border-0" style="background-color: black;">
+                        <h5 class="modal-title text-white">${videoTitle}</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body p-0">
-                        <video controls autoplay style="width: 100%;">
+                    <div class="modal-body p-0 d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+                        <video controls autoplay class="modal-video-player" style="max-width: 100%; max-height: 80vh; width: auto; height: auto;">
                             <source src="${videoUrl}" type="video/mp4">
                             Tu navegador no soporta el elemento de video.
                         </video>
@@ -210,20 +210,60 @@ function showVideoInModal(videoUrl, videoTitle) {
             </div>
         </div>
     `;
-    
+
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHTML;
     document.body.appendChild(modalContainer);
     
     const videoModal = new bootstrap.Modal(document.getElementById(modalId));
+    const videoElement = document.querySelector(`#${modalId} .modal-video-player`);
+    
+    // Calcular tamaño cuando se conozcan las dimensiones del video
+    videoElement.onloadedmetadata = function() {
+        const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
+        const windowHeight = window.innerHeight * 0.8; // 80vh
+        const windowWidth = window.innerWidth * 0.9;   // 90% del ancho
+        
+        if (windowWidth / aspectRatio <= windowHeight) {
+            videoElement.style.width = `${windowWidth}px`;
+            videoElement.style.height = 'auto';
+        } else {
+            videoElement.style.height = `${windowHeight}px`;
+            videoElement.style.width = 'auto';
+        }
+    };
+
     videoModal.show();
     
-    // Eliminar el modal cuando se cierre
+    // Detener el video cuando se cierra el modal
     document.getElementById(modalId).addEventListener('hidden.bs.modal', () => {
+        if (videoElement) {
+            videoElement.pause();
+            videoElement.currentTime = 0;
+        }
         modalContainer.remove();
     });
+    
+    // Redimensionar cuando cambia el tamaño de la ventana
+    window.addEventListener('resize', function handleResize() {
+        if (!videoModal._isShown) {
+            window.removeEventListener('resize', handleResize);
+            return;
+        }
+        
+        const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
+        const windowHeight = window.innerHeight * 0.8;
+        const windowWidth = window.innerWidth * 0.9;
+        
+        if (windowWidth / aspectRatio <= windowHeight) {
+            videoElement.style.width = `${windowWidth}px`;
+            videoElement.style.height = 'auto';
+        } else {
+            videoElement.style.height = `${windowHeight}px`;
+            videoElement.style.width = 'auto';
+        }
+    });
 }
-
 // Funciones de administración
 async function loadVideosForDeletion() {
     try {

@@ -168,3 +168,35 @@ body {
         margin-top: 20px;
     }
 }
+
+/* Estilos para el modal de video */
+.modal-video-player {
+    background-color: #000;
+    margin: 0 auto;
+    display: block;
+}
+
+.modal-xl .modal-content {
+    background-color: transparent;
+    border: none;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Asegurar que el modal ocupe toda la pantalla posible */
+@media (max-width: 1200px) {
+    .modal-xl {
+        max-width: 95vw;
+    }
+}
+
+@media (max-height: 800px) {
+    .modal-body {
+        min-height: 60vh !important;
+    }
+    .modal-video-player {
+        max-height: 70vh !important;
+    }
+}
