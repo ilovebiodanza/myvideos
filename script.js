@@ -391,55 +391,69 @@ async function loadVideosListForDeletion(classification) {
 }
 
 async function uploadVideo() {
-  const title = document.getElementById("videoTitle").value.trim();
-  const classification = document
-    .getElementById("videoClassification")
-    .value.trim();
-  const fileInput = document.getElementById("videoFile");
+    const title = document.getElementById("videoTitle").value.trim();
+    const classification = document.getElementById("videoClassification").value.trim();
+    const fileInput = document.getElementById("videoFile");
 
-  if (!title || !classification || !fileInput.files.length) {
-    showMessage("Error", "Por favor complete todos los campos");
-    return;
-  }
-
-  const file = fileInput.files[0];
-  const fileName = `${title}.${file.name.split(".").pop()}`;
-  const path = `${classification}/${fileName}`;
-
-  try {
-    const fileContent = await readFileAsBase64(file);
-    const content = fileContent.split(",")[1];
-
-    const response = await fetch(
-      `https://api.github.com/repos/${config.githubRepo}/contents/${path}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `token ${config.token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: `Agregar video: ${fileName}`,
-          content: content,
-          branch: config.branch,
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Error al subir el video");
+    if (!title || !classification || !fileInput.files.length) {
+        showMessage("Error", "Por favor complete todos los campos");
+        return;
     }
 
-    showMessage("Éxito", "Video subido correctamente");
-    resetForm();
-    loadVideos();
-    if (currentMode === "edit") loadVideosForDeletion();
-  } catch (error) {
-    showMessage("Error", `No se pudo subir el video: ${error.message}`);
-  }
-}
+    // Mostrar indicador de carga
+    const uploadIndicator = document.getElementById("uploadIndicator");
+    const uploadTimer = uploadIndicator.querySelector(".upload-timer");
+    uploadIndicator.style.display = "flex";
+    
+    let seconds = 0;
+    const timerInterval = setInterval(() => {
+        seconds++;
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        uploadTimer.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }, 1000);
 
+    const file = fileInput.files[0];
+    const fileName = `${title}.${file.name.split(".").pop()}`;
+    const path = `${classification}/${fileName}`;
+
+    try {
+        const fileContent = await readFileAsBase64(file);
+        const content = fileContent.split(",")[1];
+
+        const response = await fetch(
+            `https://api.github.com/repos/${config.githubRepo}/contents/${path}`,
+            {
+                method: "PUT",
+                headers: {
+                    Authorization: `token ${config.token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    message: `Agregar video: ${fileName}`,
+                    content: content,
+                    branch: config.branch,
+                }),
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Error al subir el video");
+        }
+
+        showMessage("Éxito", "Video subido correctamente");
+        resetForm();
+        loadVideos();
+        if (currentMode === "edit") loadVideosForDeletion();
+    } catch (error) {
+        showMessage("Error", `No se pudo subir el video: ${error.message}`);
+    } finally {
+        // Ocultar indicador de carga
+        clearInterval(timerInterval);
+        uploadIndicator.style.display = "none";
+    }
+}
 async function deleteVideo(classification, videoName) {
   if (
     !confirm(`¿Está seguro que desea eliminar ${classification}/${videoName}?`)
