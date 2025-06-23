@@ -9,12 +9,12 @@ function encriptar(texto, desplazamiento) {
         );
       } else if (char >= "a" && char <= "z") {
         return String.fromCharCode(
-          ((char.charCodeAt(0) - 97 + desplazamiento + 26) % 26 + 97
+          (char.charCodeAt(0) - 97 + desplazamiento + 26) % 26 + 97
         );
       } else if (char >= "0" && char <= "9") {
         // Manejar números
         return String.fromCharCode(
-          ((char.charCodeAt(0) - 48 + desplazamiento + 10) % 10 + 48
+          (char.charCodeAt(0) - 48 + desplazamiento + 10) % 10 + 48
         );
       }
       return char; // No modifica caracteres especiales como _, -, etc.
