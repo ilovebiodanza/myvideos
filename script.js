@@ -5,7 +5,7 @@ function encriptar(texto, desplazamiento) {
       // Solo encripta letras, deja otros caracteres como están
       if (char >= "A" && char <= "Z") {
         return String.fromCharCode(
-          ((char.charCodeAt(0) - 65 + desplazamiento + 26) % 26 + 65
+          (char.charCodeAt(0) - 65 + desplazamiento + 26) % 26 + 65
         );
       } else if (char >= "a" && char <= "z") {
         return String.fromCharCode(
