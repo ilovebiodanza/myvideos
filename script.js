@@ -82,7 +82,7 @@ function initEventListeners() {
 
 // Funciones de modo
 function handleKeyCombination(e) {
-  if (e.ctrlKey && e.shiftKey && e.key === "A") {
+  if (e.ctrlKey && e.shiftKey && e.key === "E") {
     setMode("edit");
     e.preventDefault();
   } else if (e.ctrlKey && e.shiftKey && e.key === "V") {
