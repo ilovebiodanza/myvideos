@@ -105,67 +105,25 @@ function setMode(mode) {
   }
 }
 
-// Función recursiva para obtener todos los videos de un repositorio
-async function getAllVideos(path = '') {
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/${config.githubRepo}/contents/${path}?ref=${config.branch}`
-    );
-    if (!response.ok) throw new Error("Error al cargar el contenido");
-
-    const items = await response.json();
-    let videos = [];
-
-    for (const item of items) {
-      if (item.type === "dir") {
-        // Si es un directorio, explorar recursivamente
-        const subVideos = await getAllVideos(item.path);
-        videos = videos.concat(subVideos);
-      } else if (item.type === "file" && isVideoFile(item.name)) {
-        // Si es un archivo de video, agregarlo con su ruta completa
-        videos.push({
-          ...item,
-          classification: path.split('/')[0], // La primera parte de la ruta es la clasificación principal
-          fullPath: path // Guardamos la ruta completa para agrupación
-        });
-      }
-    }
-
-    return videos;
-  } catch (error) {
-    console.error(`Error al obtener videos de ${path}:`, error);
-    return [];
-  }
-}
-
 // Funciones para cargar videos
 async function loadVideos() {
   try {
-    const allVideos = await getAllVideos();
+    const response = await fetch(
+      `https://api.github.com/repos/${config.githubRepo}/contents?ref=${config.branch}`
+    );
+    if (!response.ok) throw new Error("Error al cargar las clasificaciones");
+
+    const classifications = await response.json();
     videosContainer.innerHTML = "";
-    
-    // Agrupar videos por su ruta completa
-    const videosByPath = groupVideosByPath(allVideos);
-    
-    // Crear acordeones para cada grupo
-    for (const [path, videos] of Object.entries(videosByPath)) {
-      createClassificationAccordion(path, videos);
+
+    for (const classification of classifications) {
+      if (classification.type === "dir") {
+        await loadVideosForClassification(classification.name);
+      }
     }
   } catch (error) {
     showMessage("Error", `No se pudieron cargar los videos: ${error.message}`);
   }
-}
-
-// Función para agrupar videos por su ruta
-function groupVideosByPath(videos) {
-  return videos.reduce((groups, video) => {
-    const path = video.fullPath || video.classification || 'Videos';
-    if (!groups[path]) {
-      groups[path] = [];
-    }
-    groups[path].push(video);
-    return groups;
-  }, {});
 }
 
 async function loadVideosForClassification(classification) {
@@ -189,12 +147,9 @@ function createClassificationAccordion(classification, videos) {
   const accordionItem = document.createElement("div");
   accordionItem.className = "accordion-item shadow-sm mb-3";
 
-  // Extraer el nombre de visualización de la ruta (última parte)
-  const displayName = classification.split('/').pop();
-  
   const accordionHeader = document.createElement("h2");
   accordionHeader.className = "accordion-header";
-  accordionHeader.id = `heading${classification.replace(/[^a-zA-Z0-9]/g, "")}`;
+  accordionHeader.id = `heading${classification.replace(/\s+/g, "")}`;
 
   const accordionButton = document.createElement("button");
   accordionButton.className = "accordion-button collapsed fw-semibold";
@@ -202,17 +157,17 @@ function createClassificationAccordion(classification, videos) {
   accordionButton.setAttribute("data-bs-toggle", "collapse");
   accordionButton.setAttribute(
     "data-bs-target",
-    `#collapse${classification.replace(/[^a-zA-Z0-9]/g, "")}`
+    `#collapse${classification.replace(/\s+/g, "")}`
   );
-  accordionButton.textContent = displayName;
+  accordionButton.textContent = classification;
   accordionHeader.appendChild(accordionButton);
 
   const accordionCollapse = document.createElement("div");
-  accordionCollapse.id = `collapse${classification.replace(/[^a-zA-Z0-9]/g, "")}`;
+  accordionCollapse.id = `collapse${classification.replace(/\s+/g, "")}`;
   accordionCollapse.className = "accordion-collapse collapse";
   accordionCollapse.setAttribute(
     "aria-labelledby",
-    `heading${classification.replace(/[^a-zA-Z0-9]/g, "")}`
+    `heading${classification.replace(/\s+/g, "")}`
   );
   accordionCollapse.setAttribute("data-bs-parent", "#videosContainer");
 
@@ -221,13 +176,11 @@ function createClassificationAccordion(classification, videos) {
 
   const listGroup = document.createElement("div");
   listGroup.className = "list-group list-group-flush";
-  
-  // Ordenar videos alfabéticamente
-  videos.sort((a, b) => a.name.localeCompare(b.name));
-  
   // Añadir videos a la lista
   videos.forEach((video) => {
-    listGroup.appendChild(createVideoListItem(classification, video));
+    if (video.type === "file" && isVideoFile(video.name)) {
+      listGroup.appendChild(createVideoListItem(classification, video));
+    }
   });
 
   accordionBody.appendChild(listGroup);
@@ -382,39 +335,18 @@ function showVideoInModal(videoUrl, videoTitle, classification) {
 // Funciones de administración
 async function loadVideosForDeletion() {
   try {
-    const allVideos = await getAllVideos();
+    const response = await fetch(
+      `https://api.github.com/repos/${config.githubRepo}/contents?ref=${config.branch}`
+    );
+    if (!response.ok) throw new Error("Error al cargar las clasificaciones");
+
+    const classifications = await response.json();
     deleteVideoList.innerHTML = "";
 
-    // Agrupar videos por su ruta completa
-    const videosByPath = groupVideosByPath(allVideos);
-    
-    // Crear elementos de lista para eliminación
-    for (const [path, videos] of Object.entries(videosByPath)) {
-      const groupHeader = document.createElement("div");
-      groupHeader.className = "list-group-item list-group-item-secondary fw-bold";
-      groupHeader.textContent = path;
-      deleteVideoList.appendChild(groupHeader);
-      
-      videos.forEach((video) => {
-        const listItem = document.createElement("button");
-        listItem.className =
-          "list-group-item list-group-item-action d-flex justify-content-between align-items-center ps-4";
-        listItem.textContent = `${video.fullPath}/${video.name.replace(
-          /\.[^/.]+$/,
-          ""
-        )}`;
-
-        const deleteBtn = document.createElement("span");
-        deleteBtn.className = "badge bg-danger rounded-pill";
-        deleteBtn.textContent = "Eliminar";
-        deleteBtn.onclick = (e) => {
-          e.stopPropagation();
-          deleteVideo(video.fullPath, video.name);
-        };
-
-        listItem.appendChild(deleteBtn);
-        deleteVideoList.appendChild(listItem);
-      });
+    for (const classification of classifications) {
+      if (classification.type === "dir") {
+        await loadVideosListForDeletion(classification.name);
+      }
     }
   } catch (error) {
     showMessage(
@@ -489,17 +421,14 @@ async function uploadVideo() {
 
     const file = fileInput.files[0];
     const fileName = `${title}.${file.name.split(".").pop()}`;
-    const path = classification; // Ahora puede incluir subdirectorios (ej: "clasificacion/subdirectorio")
+    const path = `${classification}/${fileName}`;
 
     try {
         const fileContent = await readFileAsBase64(file);
         const content = fileContent.split(",")[1];
 
-        // Verificar si el directorio existe, si no, crearlo
-        await ensureDirectoryExists(path);
-
         const response = await fetch(
-            `https://api.github.com/repos/${config.githubRepo}/contents/${path}/${fileName}`,
+            `https://api.github.com/repos/${config.githubRepo}/contents/${path}`,
             {
                 method: "PUT",
                 headers: {
@@ -531,57 +460,15 @@ async function uploadVideo() {
         uploadIndicator.style.display = "none";
     }
 }
-
-// Función para asegurar que un directorio exista (crea todos los directorios necesarios en la ruta)
-async function ensureDirectoryExists(path) {
-    const parts = path.split('/');
-    let currentPath = '';
-    
-    for (const part of parts) {
-        currentPath = currentPath ? `${currentPath}/${part}` : part;
-        
-        try {
-            const response = await fetch(
-                `https://api.github.com/repos/${config.githubRepo}/contents/${currentPath}?ref=${config.branch}`
-            );
-            
-            if (response.status === 404) {
-                // El directorio no existe, hay que crearlo
-                const createResponse = await fetch(
-                    `https://api.github.com/repos/${config.githubRepo}/contents/${currentPath}/.gitkeep`,
-                    {
-                        method: "PUT",
-                        headers: {
-                            Authorization: `token ${config.token}`,
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            message: `Crear directorio: ${currentPath}`,
-                            content: btoa(""), // Archivo vacío
-                            branch: config.branch,
-                        }),
-                    }
-                );
-                
-                if (!createResponse.ok) {
-                    throw new Error(`No se pudo crear el directorio ${currentPath}`);
-                }
-            } else if (!response.ok) {
-                throw new Error(`Error al verificar el directorio ${currentPath}`);
-            }
-        } catch (error) {
-            throw new Error(`Error al asegurar el directorio ${currentPath}: ${error.message}`);
-        }
-    }
-}
-
-async function deleteVideo(path, videoName) {
-  if (!confirm(`¿Está seguro que desea eliminar ${path}/${videoName}?`))
+async function deleteVideo(classification, videoName) {
+  if (
+    !confirm(`¿Está seguro que desea eliminar ${classification}/${videoName}?`)
+  )
     return;
 
   try {
     const getResponse = await fetch(
-      `https://api.github.com/repos/${config.githubRepo}/contents/${path}/${videoName}?ref=${config.branch}`
+      `https://api.github.com/repos/${config.githubRepo}/contents/${classification}/${videoName}?ref=${config.branch}`
     );
     if (!getResponse.ok)
       throw new Error("No se pudo obtener información del video");
@@ -589,7 +476,7 @@ async function deleteVideo(path, videoName) {
     const fileInfo = await getResponse.json();
 
     const deleteResponse = await fetch(
-      `https://api.github.com/repos/${config.githubRepo}/contents/${path}/${videoName}`,
+      `https://api.github.com/repos/${config.githubRepo}/contents/${classification}/${videoName}`,
       {
         method: "DELETE",
         headers: {
