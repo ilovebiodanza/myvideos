@@ -135,29 +135,3 @@
     50% { transform: scale(1.3); }
     100% { transform: scale(1); }
 }
-
-/* Estilos para la lista de eliminación jerárquica */
-#deleteVideoList .list-group-item-secondary {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-}
-
-#deleteVideoList .list-group-item-action {
-    border-left: 3px solid #6c757d;
-}
-
-/* Estilos para el acordeón jerárquico */
-.accordion-body .accordion {
-    margin-top: 0.5rem;
-    border: 1px solid rgba(0,0,0,0.125);
-    border-radius: 0.25rem;
-}
-
-.accordion-body .accordion-item {
-    border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.125);
-}
-
-.accordion-body .accordion-item:last-child {
-    border-bottom: none;
-}
