@@ -30,7 +30,7 @@ const config = {
 
   githubRepo: "ilovebiodanza/myvideos",
   branch: "main",
-  token: encriptar("jks_TgJVT4PfbADYT9VVqsOKOne3k0qGrU0VHL3D", -3),
+  token: encriptar("jks_TgJVT7PfbADYT2VVqsOKOne6k3qGrU3VHL6D", -3),
 };  
 
 // Variables de estado
